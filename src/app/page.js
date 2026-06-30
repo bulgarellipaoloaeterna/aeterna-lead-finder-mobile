@@ -7,7 +7,7 @@ export default function LeadFinder() {
   const [city, setCity] = useState("");
   const [maxResults, setMaxResults] = useState(20);
   
-  const [onlyNoWebsite, setOnlyNoWebsite] = useState(false);
+  const [onlyNoWebsite, setOnlyNoWebsite] = useState(true);
   const [onlyMobile, setOnlyMobile] = useState(true);
   const [excludeHistory, setExcludeHistory] = useState(true);
   
