@@ -161,7 +161,7 @@ export default function LeadFinder() {
               </div>
             ) : (
               results.map((lead, idx) => (
-                <div key={lead.place_id} className="lead-card" style={{ animationDelay: \`\${idx * 30}ms\` }}>
+                <div key={lead.place_id} className="lead-card" style={{ animationDelay: `${idx * 30}ms` }}>
                   <div className="lead-name">{lead.name}</div>
                   <div className="lead-address">{lead.address}</div>
                   <div className="lead-badges">
