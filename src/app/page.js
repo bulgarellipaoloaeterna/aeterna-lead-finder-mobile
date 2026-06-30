@@ -121,38 +121,12 @@ export default function LeadFinder() {
     return selected;
   };
 
-  const sendToRaspberry = async () => {
+  const sendToNotion = async (status) => {
     const leadsToSend = getSelectedLeadsObjects();
     if (leadsToSend.length === 0) return alert("Nessun lead selezionato");
-    setSendingState("Invio al Bot in corso...");
+    setSendingState(`Invio a Notion (${status}) in corso...`);
     try {
-      const res = await fetch(`${API_URL}/queue`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '1'
-        },
-        body: JSON.stringify({ 
-          leads: leadsToSend.map(l => ({ id: l.place_id, name: l.name, phone: l.phone, website: l.website })) 
-        })
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.error);
-      alert(`✅ ${data.inserted} lead inviati al Bot WhatsApp!`);
-      setSelectedLeads(new Set());
-    } catch (e) {
-      alert("Errore invio Bot: " + e.message);
-    } finally {
-      setSendingState("");
-    }
-  };
-
-  const sendToNotion = async () => {
-    const leadsToSend = getSelectedLeadsObjects();
-    if (leadsToSend.length === 0) return alert("Nessun lead selezionato");
-    setSendingState("Invio a Notion in corso...");
-    try {
-      // Invia divisi per target/activity per semplificare
+      const leadsWithStatus = leadsToSend.map(l => ({ ...l, customStatus: status }));
       const res = await fetch(`${API_URL}/leads/notion`, {
         method: 'POST',
         headers: { 
@@ -160,7 +134,7 @@ export default function LeadFinder() {
           'ngrok-skip-browser-warning': '1'
         },
         body: JSON.stringify({ 
-          leads: leadsToSend, 
+          leads: leadsWithStatus, 
           target: targetNotion,
           activity: leadsToSend[0]?.activity || "Altro"
         })
@@ -326,11 +300,11 @@ export default function LeadFinder() {
                 </div>
                 {sendingState && <div style={{ fontSize: '13px', color: '#8e8e93', textAlign: 'center' }}>{sendingState}</div>}
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button onClick={sendToNotion} disabled={!!sendingState} style={{ flex: 1, padding: '12px', background: '#fff', color: '#000', border: 'none', borderRadius: '10px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
-                    <Server size={16} /> Notion
+                  <button onClick={() => sendToNotion("Da Contattare")} disabled={!!sendingState} style={{ flex: 1, padding: '12px', background: '#fff', color: '#000', border: 'none', borderRadius: '10px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
+                    <Server size={16} /> Solo Notion
                   </button>
-                  <button onClick={sendToRaspberry} disabled={!!sendingState} style={{ flex: 1, padding: '12px', background: 'var(--success)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
-                    <Send size={16} /> WhatsApp Bot
+                  <button onClick={() => sendToNotion("Inviato al raspberry")} disabled={!!sendingState} style={{ flex: 1, padding: '12px', background: 'var(--success)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
+                    <Send size={16} /> Invia a Raspberry
                   </button>
                 </div>
               </div>
