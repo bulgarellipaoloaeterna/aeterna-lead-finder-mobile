@@ -40,7 +40,10 @@ export default function LeadFinder() {
     try {
       const response = await fetch(`${API_URL}/leads/search`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "1"
+        },
         body: JSON.stringify({
           activity,
           city,
@@ -66,7 +69,11 @@ export default function LeadFinder() {
     setLoadingHistory(true);
     setHistoryError(null);
     try {
-      const response = await fetch(`${API_URL}/leads/history`);
+      const response = await fetch(`${API_URL}/leads/history`, {
+        headers: {
+          "ngrok-skip-browser-warning": "1"
+        }
+      });
       const data = await response.json();
       if (!data.success) throw new Error(data.error || "Errore API Cronologia");
       setHistorySessions(data.sessions || []);
@@ -121,7 +128,10 @@ export default function LeadFinder() {
     try {
       const res = await fetch(`${API_URL}/queue`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': '1'
+        },
         body: JSON.stringify({ 
           leads: leadsToSend.map(l => ({ id: l.place_id, name: l.name, phone: l.phone, website: l.website })) 
         })
@@ -145,7 +155,10 @@ export default function LeadFinder() {
       // Invia divisi per target/activity per semplificare
       const res = await fetch(`${API_URL}/leads/notion`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': '1'
+        },
         body: JSON.stringify({ 
           leads: leadsToSend, 
           target: targetNotion,
