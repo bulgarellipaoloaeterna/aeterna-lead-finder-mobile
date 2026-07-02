@@ -300,11 +300,37 @@ export default function LeadFinder() {
                 </div>
                 {sendingState && <div style={{ fontSize: '13px', color: '#8e8e93', textAlign: 'center' }}>{sendingState}</div>}
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button onClick={() => sendToNotion("Da Contattare")} disabled={!!sendingState} style={{ flex: 1, padding: '12px', background: '#fff', color: '#000', border: 'none', borderRadius: '10px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
-                    <Server size={16} /> Solo Notion
-                  </button>
-                  <button onClick={() => sendToNotion("Inviato al raspberry")} disabled={!!sendingState} style={{ flex: 1, padding: '12px', background: 'var(--success)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
-                    <Send size={16} /> Invia a Raspberry
+                  <select
+                    style={{ flex: 1, background: '#1c1c1e', color: '#fff', border: '1px solid var(--border)', padding: '12px', borderRadius: '10px' }}
+                    onChange={(e) => {
+                      // Impostiamo l'invio diretto quando cambia
+                      document.getElementById('status-sender-btn').dataset.status = e.target.value;
+                    }}
+                    defaultValue="Da Contattare"
+                    id="status-selector"
+                  >
+                    <option value="Da Contattare">Da Contattare</option>
+                    <option value="Inviato al raspberry">Inviato al raspberry</option>
+                    <option value="Sito in Creazione">Sito in Creazione</option>
+                    <option value="Sito Pronto">Sito Pronto</option>
+                    <option value="Contattato">Contattato</option>
+                    <option value="Primo Messaggio Inviato">Primo Messaggio Inviato</option>
+                    <option value="Secondo Messaggio Inviato">Secondo Messaggio Inviato</option>
+                    <option value="Follow-Up">Follow-Up</option>
+                    <option value="Check">Check</option>
+                    <option value="In contatto">In contatto</option>
+                    <option value="Trattativa">Trattativa</option>
+                    <option value="Cliente Acquisito">Cliente Acquisito</option>
+                    <option value="Non Interessato">Non Interessato</option>
+                  </select>
+                  <button 
+                    id="status-sender-btn"
+                    data-status="Da Contattare"
+                    onClick={(e) => sendToNotion(e.currentTarget.dataset.status)} 
+                    disabled={!!sendingState} 
+                    style={{ flex: 1, padding: '12px', background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}
+                  >
+                    <Send size={16} /> Salva Lead
                   </button>
                 </div>
               </div>
